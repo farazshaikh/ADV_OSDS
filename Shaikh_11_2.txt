@@ -1,0 +1,25 @@
+Summary:
+	The paper tries to classify all the transaction recovery systems using some criterion on design principles and implantation details.It finds out core distinguishing factors about recovery algorithms.A relative cost matrix is provided for each combination of the core design principle.
+
+
+Important Points about the paper:
+1. The paper compiles all the design priciples used in implementing database recovery techniques in around the 80's. This is good for learners because the core concepts or fundamentals behind many implementations are discussed here. (It forms the core vocabulary to describe and evaluate recovery algorithms )
+
+2. Gives us the basic criteria for classification of transaction recovery. The classification is based on
+   <a> Propagation method: Atomic/Not atomic. (Atomicity of N page writes to disk. All written or not written)
+   <b> Buffer Mgr's Page Eviction Policy: Steal/Not Steal (Evicting pages of currently running transactions or waiting atleast until a transaction completes).
+   <c> Buffer flushing policy at the end of transaction(EOT): Force/Not force (At EOT all transactions pages are forced to be flushed to stable storage).
+
+   Along with the above 3 binary classifier, recovery systems are further scoped by the types of check pointing used for optimisation recovery.(Fuzzy,Transaction operation/action consistent).
+
+3. The summary of cost associated with each combination of design criteria is described succinctly in a tabular format.
+
+
+Deficiency:
+-The cost of the form described in LFS where we take the ratio of actual data to the overhead data should have been provided. i.e for X data items how many data items are required in transaction logs. (Space cost)
+-The fig 13 describing the taxonomy should have be presented up front. Reader is clue less where the definitions are heading until he sees the fig 13.
+
+
+Guideline for future work:
+     Evaluation of recovery algorithms (in DB or FS) can be done using classifying them according to author taxonomy and then comparing their cost.
+

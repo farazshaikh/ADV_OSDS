@@ -1,0 +1,22 @@
+The Protection of Information in Computer Systems
+JEROME H. SALTZER,
+
+
+Summary: 
+	The paper describes various alternative of protecting information on computers. The basics of descriptor based system, capability based and ACL based systems for securing information are described in this paper. Initially the paper explains the background and complexities involved in building secure systems. The paper gives an important 8 point design guideline for building new protection systems. The paper ends with a discussion on the then state of the art systems for securing information.
+
+
+
+Highlights:
+1. The paper was written in 1975 and the i386 was introduced in 1986. The importance of the security methods described in this paper can be gauged by the fact that today all Modern PC's mimic techniques described in the paper. Ex the paging and segment level protection in the i386, ticket based and ACL based protection schemes. 
+
+2. The capability based model is described for protecting memory segments, which is something very new for me. This level of granularity is not explored intuitively now a days because ticket based protection is loosely always thought to Kerberos like user authentication.
+
+3. One of the important principles learnt here is that - modern systems use both ticket based and ACL based protection systems. ACL based is slower because of the associative search, so is used when protection checking is infrequent. On the other had ticket based system are slower in initial setup, but very fast in checking for access.
+
+Deficiency:
+Some concepts are repeated for no reason. Example: explanation of sharing of math routine by virtual processors and programs. May be we find things in section 2 very obvious because now we know i386 well.
+
+Things to learn for future research:
+We all know i386 today and consider it as our only hardware mechanism to implement secure multi programming systems. In future we may decide to build a secure computing hardware solution from the ground up (including new processor). To design such future systems we will take the 8 design principles described in this paper as our guideline. 
+Ex: Economy of mechanism, fail-safe defaults, complete mediation, open design, separation of privilege, least privilege, least common mechanism, and psychological acceptability.

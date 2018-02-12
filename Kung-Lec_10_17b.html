@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+
+
+    
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    
+  <meta name="Author" content="Joseph M. Hellerstein">
+    
+  <meta name="GENERATOR" content="Mozilla/4.75 [en] (WinNT; U) [Netscape]"><title>Optimistic Concurrency Control</title></head><body>
+ &nbsp; 
+<table border="0" cols="2" width="100%">
+ <tbody>
+    <tr>
+ <td><b>Advanced Topics in Computer Systems</b></td>
+  <td>&nbsp;</td>
+ </tr>
+  <tr>
+ <td><b>Joe Hellerstein &amp; Eric Brewer</b></td>
+  <td><br>
+      </td>
+ </tr>
+ 
+  </tbody>
+</table>
+  
+<h2> Concurrency Control: Alternate Realities</h2>
+  
+<h2> Optimistic Concurrency Control (Kung &amp; Robinson)</h2>
+ Attractive, simple idea: optimize case where conflict is rare. 
+<p>Basic idea: all transactions consist of three phases: </p>
+<ol>
+ <li> Read. Here, all writes are to private storage (shadow copies).</li>
+  <li> Validation. Make sure no conflicts have occurred.</li>
+  <li> Write. If Validation was successful, make writes public. (If not,
+abort!)</li>
+ 
+</ol>
+ When might this make sense? Three examples: 
+<ol>
+ <li> All transactions are readers.</li>
+  <li> Lots of transactions, each accessing/modifying only a small amount
+of data, large total amount of data.</li>
+  <li> Fraction of transaction execution in which conflicts "really take
+place" is small compared to total pathlength.</li>
+ 
+</ol>
+ The Validation Phase 
+<ul>
+ <li> Goal: to guarantee that only serializable schedules result.</li>
+  <li> Technique: actually find an equivalent serializable schedule. In particular,</li>
+ 
+</ul>
+  
+<blockquote> 
+  <ol>
+ <li> Assign each transaction a TN during execution.</li>
+  <li> Ensure that if you run transactions in order induced by "&lt;" on
+TNs, you get an equivalent serial schedule.</li>
+ 
+  </ol>
+ </blockquote>
+ Suppose TN(Ti) &lt; TN(Tj). Then if one of the following three conditions 
+holds, it&#8217;s serializable: 
+  <ol>
+ 
+    <ol>
+ <li> Ti completes its write phase before Tj starts its read phase.</li>
+  <li> WS(Ti) <i><font face="Symbol">intersect </font></i>RS(Tj) = <i>emptyset
+        </i>and Ti completes its write phase before Tj starts its write phase.</li>
+  <li> WS(Ti)<font face="Symbol"> <i>intersect</i></font> RS(Tj) = WS(Ti)
+        <i>intersect</i> WS(Tj) = <i>emptyset </i>and Ti completes its read
+phase before Tj completes its read phase.</li>
+ 
+    </ol>
+ 
+  </ol>
+ Is this correct? Each condition guarantees that the 3 possible classes of
+conflicts (W-R, R-W, W-W) on the 2 orderings (i before j, j before i) go
+in one order only: i before j.&nbsp; There are 3x2=6 possible conflict orderings
+to consider. 
+  <ol>
+ <li> For condition 1 all conflicts are ordered i before j (true serial execution!)</li>
+  <li> For condition 2,</li>
+ 
+  </ol>
+  
+  <ul>
+ 
+    <ul>
+ <li> No WiRj or RjWi conflicts since WS(Ti) <font face="Symbol">Ç</font>
+ RS(Tj) = <font face="Symbol">Æ</font></li>
+  <li> No WjRi or WjWi conflicts since the write phase (and hence the read
+phase) of Ti precedes the write phase of Tj.</li>
+  <li> This leaves the possibility of RiWj and WiWj, both of which are ordered 
+i before j.</li>
+ 
+    </ul>
+ 
+  </ul>
+  
+  <ol>
+ <li value="3" type="disc"> For condition 3,</li>
+ 
+  </ol>
+  
+  <ul>
+ 
+    <ul>
+ <li> No WiRj or RjWi conflicts since WS(Ti) <font face="Symbol">Ç</font>
+ RS(Tj) = <font face="Symbol">Æ</font> .</li>
+  <li> No WiWj or WjWi conflicts since WS(Ti) <font face="Symbol">Ç</font>
+ WS(Tj) = <font face="Symbol">Æ</font> .</li>
+  <li> WjRi not possible since the read phase of Ti precedes the write phase
+of Tj.</li>
+  <li> This leaves only the possibility of RiWj.</li>
+ 
+    </ul>
+ 
+  </ul>
+ <b>Assigning TN's</b>: at beginning of transactions is not optimistic, since
+a transaction could not be able to validate immediately if it's predecessor 
+transactions were still running; this smells like locking.&nbsp; Instead, 
+assign TNs it at end of read phase. Note: this satisfies second half of condition
+(3). 
+  <p><b>Note</b>: a transaction T with a very long read phase must check write
+sets of all transactions begun and finished while T was active.&nbsp; This
+could require unbounded buffer space. <br>
+  <b>Solution</b>: bound buffer space, toss out when full, abort transactions 
+that could be affected. </p>
+  <ul>
+ <li> Gives rise to starvation. Solve by having starving transaction write-lock 
+the whole DB!</li>
+ 
+  </ul>
+ Serial Validation 
+  <p>Only checks properties (1) and (2), since writes are not going to be 
+interleaved. </p>
+  <p>Simple technique: make a critical section around &lt;get xactno; validate 
+(1) or (2) for everybody from your start to finish; write&gt;. Not great
+if: </p>
+  <ul>
+ 
+    <ul>
+ <li> write takes a long time</li>
+  <li> SMP &#8211; might want to validate 2 things at once if there&#8217;s not enough
+reading to do</li>
+ 
+    </ul>
+ 
+  </ul>
+ Improvement to speed up validation: 
+  <p>repeat as often as you want { </p>
+  <ul>
+ 
+    <ul>
+get current xactno. 
+      <p>Check if you&#8217;re valid with everything up to that xactno.</p>
+    </ul>
+ 
+  </ul>
+ } 
+  <p>&lt;get xactno; validate with new xacts; write&gt;. </p>
+  <p>Note: read-only xacts don&#8217;t need to get xactnos! Just need to validate 
+up to highest xactno at end of read phase (without critical section!) <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; </p>
+  <h3> Parallel Validation</h3>
+ Want to allow interleaved writes. <br>
+Need to be able to check condition (3). 
+  <ul>
+ 
+    <ul>
+ <li> Save active xacts (those which have finished reading but not writing).</li>
+  <li> Active xacts can&#8217;t intersect your read or write set.</li>
+  <li> Validation:</li>
+ 
+    </ul>
+ 
+  </ul>
+  
+  <ul>
+ 
+    <ul>
+&lt;get xactno; copy active; add yourself to active&gt; <br>
+check (1) or (2) against everything from start to finish; <br>
+check (3) against all xacts in active copy <br>
+If all&#8217;s clear, go ahead and write. <br>
+&lt;bump xact counter, remove yourself from active&gt;.
+    </ul>
+ 
+  </ul>
+ Small critical section. <br>
+Problems: 
+  <ul>
+ 
+    <ul>
+ <li> a member of active that causes you to abort may have aborted</li>
+  
+      <ul>
+ <li> can add even more bookkeeping to handle this</li>
+  <li> can make active short with improvement analogous to that of serial
+validation</li>
+ 
+      </ul>
+ 
+    </ul>
+ 
+  </ul>
+  
+  <h2> One More Concurrency Control Technique</h2>
+ Time Stamping: Bernstein TODS &#8217;79 <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; 
+  <table border="1" cellpadding="7" width="252">
+ <tbody>
+      <tr>
+ <td valign="top" width="50%"> 
+        <center>record&nbsp;</center>
+ </td>
+  <td valign="top" width="26%">Write TS</td>
+  <td valign="top" width="24%">Read TS</td>
+ </tr>
+ 
+    </tbody>
+  </table>
+  <br>
+&nbsp; 
+  <ul>
+ <li> Every xact gets a unique timestamp at startup</li>
+  <li> on Read: OK if Xact TS &gt; WTS. Install new RTS if xact TS &gt; RTS.</li>
+  <li> on Write: OK if xact TS &gt; MAX(RTS, WTS). Install new WTS.</li>
+ 
+  </ul>
+ Problems: 
+  <ol>
+ <li> forces time-stamp order (tighter restriction than other schemes)</li>
+  <li> cascaded aborts (no isolation)</li>
+  <li> I/O cost even on "clean" pages</li>
+ 
+  </ol>
+ Multi-version timestamping techniques: 
+  <ul>
+ <li> Reed&#8217;s PhD, MIT &#8216;78</li>
+  
+    <ul>
+ <li> reads get the appropriate version</li>
+  <li> writes are a bit trickier &#8211; can be added if nobody read object between 
+the new write and any "later" writes</li>
+ 
+    </ul>
+ 
+  </ul>
+ Timestamping is not dead, but it is not popular, either.&nbsp; Note that 
+it wasn't used in Postgres (which did keep versions). <br>
+&nbsp; 
+  <h2> Performance Study: Locking vs. Optimistic</h2>
+  
+  <h3> Agrawal/Carey/Livny</h3>
+ Previous work had conflicting results: 
+  <ul>
+ <li> Carey &amp; Stonebraker (VLDB84), Agrawal &amp; DeWitt (TODS85): blocking 
+beats restarts</li>
+  <li> Tay (Harvard PhD) &amp; Balter (PODC82): restarts beat blocking</li>
+  <li> Franaszek &amp; Robinson (TODS85): optimistic beats locking</li>
+ 
+  </ul>
+ Goal of this paper: 
+  <ul>
+ <li> Do a good job modeling the problem and its variants</li>
+  <li> Capture causes of previous conflicting results</li>
+  <li> Make recommendations based on variables of problem</li>
+ 
+  </ul>
+ Methodology: 
+  <ul>
+ <li> simulation study, compare Blocking (i.e. 2PL), Immediate Restart (restart 
+after E(xact length) when denied a lock), and Optimistic (a la Kung &amp; 
+Robinson)</li>
+  <li> pay attention to model of system:</li>
+  
+    <ul>
+ <li> database system model: hardware and software model (CPUs, disks, size
+&amp; granule of DB, load control mechanism, CC algorithm</li>
+  <li> user model: arrival of user tasks, nature of tasks (e.g. batch vs.
+interactive)</li>
+  <li> transaction model: logical reference string (i.e. CC schedule), physical 
+reference string (i.e. disk block requests, CPU processing bursts).</li>
+ 
+    </ul>
+ 
+  </ul>
+  
+  <ul>
+ 
+    <ul>
+Probabilistic modeling of each. They argue this is key to a performance study
+of a DBMS.
+    </ul>
+ 
+  </ul>
+  
+  <ul>
+ <li> logical queuing model</li>
+  <li> physical queuing model</li>
+ 
+  </ul>
+  
+  <p><br>
+Measurements </p>
+  <ul>
+ <li> measure throughput, mostly</li>
+  <li> pay attention to variance of response time, too</li>
+  <li> pick a DB size so that there are noticeable conflicts (else you get
+comparable performance)</li>
+ 
+  </ul>
+  
+  <p><br>
+Experiment 1: Infinite Resources </p>
+  <ul>
+ <li> as many disks and CPUs as you want</li>
+  <li> blocking thrashes due to transactions blocking numerous times &amp;
+deadlock</li>
+  <li> restart plateaus: adaptive wait period (avg response time) before
+restart</li>
+  
+    <ul>
+ <li> serves as a primitive load control!</li>
+ 
+    </ul>
+  <li> optimistic scales logarithmically: restarts go up, but new xacts replace 
+old</li>
+  <li> standard deviation of response time under locking much lower</li>
+ 
+  </ul>
+  
+  <p><br>
+Experiment 2: Limited Resources (1 CPU, 2 disks) </p>
+  <ul>
+ <li> Everybody thrashes</li>
+  <li> blocking throughput peaks at mpl 25</li>
+  <li> optimistic peaks at 10</li>
+  <li> restart peaks at 10, plateaus at 50 &#8211; as good or better than optimistic</li>
+  <li> at super-high mpl (200), restart beats both blocking and optimistic</li>
+  
+    <ul>
+ <li> but total throughput worse than blocking @ mpl 25</li>
+  <li> effectively, restart is achieving mpl 60</li>
+  <li> load control is the answer here &#8211; adding it to blocking &amp; optimistic 
+makes them handle higher mpls better</li>
+ 
+    </ul>
+ 
+  </ul>
+ Experiment 3: Multiple Resources (5, 10, 25, 50 CPUs, 2 disks each) 
+  <ul>
+ <li> optimistic starts to win at 25 CPUs</li>
+  
+    <ul>
+ <li> when useful disk utilization is only about 30%, system begins to behave 
+like infinite resources</li>
+ 
+    </ul>
+  <li> even better at 50</li>
+ 
+  </ul>
+ Experiment 4: Interactive Workloads 
+  <p>Add user think time. </p>
+  <ul>
+ <li> makes the system appear to have more resources</li>
+  <li> so optimistic wins with think times 5 &amp; 10 secs. Blocking still
+wins for 1 second think time.</li>
+ 
+  </ul>
+ Questioning 2 assumptions: 
+  <ul>
+ <li> fake restart &#8211; biases for optimistic</li>
+  
+    <ul>
+ <li> fake restarts result in less conflict.</li>
+  <li> cost of conflict in optimistic is higher</li>
+  <li> issue of k &gt; 2 transactions contending for one item</li>
+  
+      <ul>
+ <li> will have to punish k-1 of them with real restart</li>
+ 
+      </ul>
+ 
+    </ul>
+  <li> write-lock acquisition</li>
+  
+    <ul>
+ <li> recall our discussion of lock upgrades and deadlock</li>
+  <li> blind write biases for restart (optimistic not an issue here), particularly 
+with infinite resources (blocking holds write locks for a long time; waste 
+of deadlock restart not an issue here).</li>
+  <li> with finite resources, blind write restarts transactions earlier (making 
+restart look better)</li>
+ 
+    </ul>
+ 
+  </ul>
+ Conclusions 
+  <ul>
+ <li> blocking beats restarting, unless resource utilization is low</li>
+  <li> possible in situations of high think time</li>
+  <li> mpl control important. Restart&#8217;s adaptive load control is too clumsy,
+though.</li>
+  <li> false assumptions made blocking look relatively worse</li>
+  <br>
+&nbsp; 
+    <p>&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; </p>
+    <p>Final quote by Wulf!</p>
+  </ul>
+  
+  
+</body></html>

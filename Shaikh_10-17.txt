@@ -1,0 +1,42 @@
+Faraz Shaikh
+Wed 10-17-2007
+--------------------------------------------->>>
+Extensibility, Safety and Performance in the
+SPIN Operating System
+Brian N. Bershad et al
+
+Summary of the paper: 
+	The paper present the SPIN operating system, which is specifically designed with extensibility in mind. The two competing goal of an operating systems that allows extensibility are safety and performance. Safety in Spin extension is provided by type soundness,modularity and capability based dynamic linking features of Modula 3 (the language in which extensions are written). Higher performance for extensions is achieved by colocating the extension within the kernel address space.
+
+Important Contributions of the Paper:
+a. First research to experiment the use of language features like "type soundness" and "compiler signing" for safety in extensible operating systems.
+c. I think the idea of signing drivers with a Modula 3 compiler is similar to the "Driver Signing" feature in Windows OS.
+b. An extremely flexible extension framework is deccribed that allows extending ANY and ALL systems events. Multiple extensions for the same event are provided by daisy chaining extensions.
+
+Deficiency:
+-Safety/Protection that is completely provided in Software can be broken quite easily. (Thats the reason we engineered the  i386). There could have been a balance between using both hardware and software solutions for safety. (Say some untrusted part of the extension should be allowed to run in user mode)
+
+Guideline for future work:
+1. Selection of type safe languages in cases where safety is required against 3rd party code extensions. 
+2. How to write a good implementation paper. a. Define the problem b. Current solutions c. New solution d. Results and comparisons with older solutions.
+
+
+--------------------------------------------->>>
+Application performance and Flexibility on Exokernel Systems.
+Kaashoek et al
+
+Summary of the paper:
+	The paper is second in line of Exokernel research papers. First paper being D.R Engler's paper that descibes exo-kernel itself. This paper tries to understand application performance on exokernel operating systems. The first category of applications tested for performance are unmodified Unix Applications that need no special features of the Exokernel and running directly on top of a libOS. The second category of applications are applications that manage OS resources themselves by using the low level interface provided by the exokernel. 
+
+Important Contributions of the paper. 
+1. First paper to provide numbers to claim that unmodified application performance using libOSes is not hampered by using an Exokernel. At the same application managing thier own resources using the exokernel interface can gain performace benefits of a factor 8 over similar applications built on top of commodity operating systems.
+
+2. Provides great background on related OS extensions work. The discussion about micro kernel, virtual machines and loading of untrusted code by operating system helps in better understanding how exo-kernel fits in availabe extensibility research. (Clarifies the important point that micro Vs monolithic kernel is a orthogonal debate to exo-kernel).
+
+3. Global Performace stats. The global performance statistics collected on a Exokernel and monolithic kernel FreeBSD shows that exokernels match the global performance as that of traditional operating systems. 
+
+Deficiency of the paper: 
+The paper is corroborating a intutive fact that organization of OS code in one way (micro or monolithic) or the other (Ex-kernel and libOS) cannot affect the application performance drastically either ways.
+
+Guidelines:
+1. This paper must be the baseline/starting work of anybody wanting to implement a Exo-Kernel. Discussions about XN and C-FFS  provide helpful insight into practical implementation of Exo-kernels.

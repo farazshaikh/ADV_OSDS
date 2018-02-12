@@ -1,0 +1,24 @@
+Faraz Shaikh
+Wed 10-22-2007
+--------------------------------------------->>>
+On Optimistic Methods for Concurrency
+Control
+H.T Kung and John Robinson
+
+Summary of the paper: 
+	The paper present a concurrency control mechanism that requires no locks at all. Transactional concurrency is achieved by doing local updates in read phase of a transaction followed by a serializabe equivalence validation before making changes global. If validation fails (i.e transaction schedule is not serializable) the transaction is aborted and restarted instead of going in the write state (commit state).
+
+Important Contributions of the Paper:
+-The 3 validations points presented by the paper to ensure serial equivalence of transaction schedule are the key contributions of the paper. (Each validation removes chances of conflicts in schedules)
+-Point out the fact that we do use synchronization all the time (including times that there is no contention). That is in low contention scenarios we incur unecessary synchronization overhead for most the times.
+-Describes algorithm for both serial and parallel validation. This is a very important point because serial validation could have become a overhead and the entire premise of concurrency would have be flawed.
+
+Deficiency:
+-Repeated aborting of the same transaction can lead to starvation of the transaction. The paper has not thrown light on avoiding this scenario.
+-The language is very convoluted in the paper. On the first reading nothing seems to be understandable. A quick research on the topic at some research universities before reading this paper, makes the paper seem more understandable. I had a hard time understanding the 3 validation rules and why they work, so I did read up the following stuff.
+http://bnrg.cs.berkeley.edu/~adj/cs262/Lec_10_17b.html
+http://www.cs.iastate.edu/~prabhu/Tutorial/PIPELINE/dataHazClass.html
+
+Guideline for future work:
+ In low contention scenarios where the number of control points is very large, lock free algorithms like above should definately be considered to reduce synchronization overhead.
+

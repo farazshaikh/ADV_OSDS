@@ -1,0 +1,30 @@
+Recovery Management in Quicksilver
+ROGER HASKIN, YONI MALACHI, WAYNE SAWDON,
+AND GREGORY CHAN
+IBM Almaden Research Center
+
+Faraz Shaikh fshaikh@andrew.cmu.edu 5 November 07
+
+
+Summary: 
+The paper provides insight about how a distributed/network operating system uses transactions as a mechanism to provide atomic updates on distributed resources. 
+
+
+Highlights: 
+1. The QuickSilver OS provides 'mechanism' for implementing transaction to client and servers (like a library). Finally clients/servers decide how do they handle ACID semantics (policies) of their transactions. (For example a display server uses non volatile data and thus has no special handling for commits). This is a nice separation of mechanism and policies used for implementing transactions as a OS service.
+
+2. Smartly provides for compatibility for existing applications to co-exist with the new transaction oriented paradigm of OS services. Compatibility is provided by tweaks like 
+  a. running a unmodified programs under a default transaction.
+  b. Modelling transactions for volatile resources such that these transactions do no processing for the commit phase.
+  c. Providing transactions services transparently under the IPC layer. This ensures that existing application require minimum number of changes to operate under Quicksilver.
+
+3. Logging component is also designed such that it separates mechanism from policy. Basic common functions needed for logging like backpointers for log records, bulk IO to log and archiving  are  provided as optional services to servers. This allows servers to choose any recovery/logging policy they see fit - example undo/redo/undo-redo etc.
+
+Deficiency:
+Deadlock handling in transactions on a local system is tough and tougher for distributed systems. By leaving deadlocks for future research the authors skipped a key element of their transaction service. (I think it should be left as it is, OSTRICH algorithm)
+
+
+Insight for future system:
+- Good Insight for porting a service into the kernel. Gives a example of implementing only mechanism for the newly ported service in the OS.
+-Providing OS mechanism for commonly needed application services (viz transactions is a good idea). But, at the same time the introduction of this mechanism should be integrated seamlessly into OS system services. 
+-Microsoft came up with TXFS ( transactional file system) some years ago and I thought Microsoft invented it. 

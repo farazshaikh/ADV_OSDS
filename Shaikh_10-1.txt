@@ -1,0 +1,19 @@
+Faraz Shaikh
+Wed 9-12-2007
+
+	Patterson,Gibson,Katz 88 present a case for using multiple cheap and unreliable disks instead of using 1 single high performance,expensive andlarge disk.
+
+3 Most Important Points.
+-----------------------
+a. Great paper describing how to predict future problems using current state of the art and todays computer laws. (Joy's-Amdahl-Moore)
+b. Describes succinctly how the cost VS reliabilty issue need to be handled. By providing replication & error correction for unreliable disks, the unreliabity factor is offseted. Also describes how to improve performance by eliminating bottlenecks by introducing parallel access.
+c. Providing 5 broad arrangement of RAID disks with different degrees of performance and reliablity consideration.
+
+
+Deficiency of Paper. 
+--------------------
+The 5 arrangement of RAID disks is too broad. Instead the author should have summarized design patterns to achieve high performance or high reliability or both. These patterns would have helped designers of custom RAID levels like nested RAID.
+
+Learning.
+---------
+How to decide on using RAID levels given access patterns and performance requirements.

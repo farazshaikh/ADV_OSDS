@@ -1,0 +1,51 @@
+---------------------------
+Why crypto systems fail ?
+
+Summary. 
+  The author argues that most of the crypto failure are not advertised. This secrecy and hiding of failures blocks the spread of awareness about failures. The author here provides a summary of crypto failures so that lessons can be learnt out of them. The author uses the ATM technology to summarise crypto failures. 
+
+
+Highlight. 
+-The threat model for securing ATM's messages is quite different from the threat model for military messages. ATM attacks are usually not skilled hackers but are results of software bugs,insecure postal service for pin distribution and bad bank employed. Most of crypto failures are due to lack of proper implementation of crypto methods. 
+-The author provides a good analogy to the train and airline model in describing pros and cons of a centralised information security  scheme.  
+-On the topic of robustness of security systems, the author suggest that software components interacting in a security system are built with the explicitly stated security goals in mind. (He points out that reaching common security goal may involve trade-off)
+
+Deficiency 
+The paper describes the failures of crypto systems with the ATM systems as a model. The choice of the ATM system is based on the assumption is that its the most widely in use secure system. I think in todays date the study would have made more sense if the author described security failures in the contexts like email/login account hacking.
+
+Learning for future. 
+A Weak understanding of the threat model in desiging security solution can result in imperfect solutions.
+
+-----------------------------
+Reflection on trusting trust. 
+Summary.
+The paper describes how trojans can be inserted in compilation tools that be undetected by any level of source analysis of the compiler's source code. Only translation tools that are written in the target language itself are prone to this vulnerability. (Compiler is used as a generic term, it can refer to any code translation tool ex assembler).
+
+
+Highlight. 
+- While writing self replicating code, we cannot have to cyclic references to escape sequence to represent thier textual representation. (This is hinted by Thompson by pointing out that - presented program 'produces' the self reproducing program.) 
+- Explains how compiler boot strapping works at the very most basic level. The example used here is addition of a escape sequence.
+- In stage III of the paper the author uses the learning concept of stage 2 and self producing code of stage 1 to generate undetectable compile time trojan.
+ 
+Deficiency.
+- No deficiency, except for the inclusion of the moral lesson in the end. The lesson talks about the media's role in glorifying hackers. This is totally unconnected. 
+
+Learning for the future. 
+We might never get the complete security for our software unless we build each and every piece of software ourselves (including machine microcode). In building completely secure systems we should check the source code and also the source code of the tools that compile our code. (In general what the author tried to say is we cannot ever trust program/code generation tools that are themselves written in the target language.)
+
+------------------------------
+Crisis and aftermath. 
+Summary. 
+The paper describes the handling of crisis after the outbreak of the first internet worm Morris.
+
+Highlights.
+-Describes in details the working of the worm. From initial attack, to infecting other maching by trying out various password combinations. 
+-Describes the aftermath of the worm. Most importantly points to the fact that if the communication medium itself is infected, it makes it difficult to spread information about the soultion using the communication medium itself. (People cannot connect to the internet to install antivirus for the first time, as they may risk being infected before installation of the antivirus).
+-Points out to the fact that how access to source code helped in both the spreading and stopping of the virus. Due to open source the hacker was able to get common patterns and loopholes on commonly used software. Also the same opensource helped analysist find solutions for stopping the internet worm. 
+
+Deficiency.
+A technical paper should ideally not put in any opinion about the hacker. The paper actually claims and corroborates the fact that there is evidence against Morris. (Reference to Morris was not required - Iam taking a privacy class:)). 
+
+
+Learning for the future. 
+Reasearch whose outcome is not known must not be carried on critical infrastructure. 

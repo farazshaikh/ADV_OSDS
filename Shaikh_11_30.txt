@@ -1,0 +1,21 @@
+Terra: A Virtual Machine-Based Platform for Trusted Computing
+fshaikh@andrew.cmu.edu
+
+Summary: 
+	The paper describes a Trusted computation platfrom based on virtualization. It allows secure partitioning of the underlying hardware and thus provides a secure virtual machine that can be used by commodity OS (open systems) or closed systems for security.
+
+
+
+
+Highlight:
+-Cryptograhic verification of running software stack is introduced so that clients cannot tamper with running software on a closed box. 
+-Application can run in complete isolation and are protected from each other. So even if 1 program like Sendmail gets effected by a virus the amount of damage that can be done is controllable.
+-The main advantage of terra is that it can allow both open box and closed box systems to coexists.
+
+Deficiency:
+- The quake example is good but I think players can  still cheat by sharing information via mechanism like phone calls,chatting because they are ofcourse not attested/protected by terra.
+	
+
+Lessons learnt for future. 
+Secure hardware make it easy to provide strong guarantees about the behaviour of a system.
+	

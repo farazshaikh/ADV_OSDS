@@ -1,0 +1,21 @@
+Faraz Shaikh
+Wed 9-12-2007
+
+	The paper provides a novel implementation of the lockset algorithm to detect data races.
+
+3 Most Important Points.
+-----------------------
+a.Proves: The paper proves we can write SOME algorithm to detect races,based on some Insight of the locking policy used in a program. Important to note here is the correctness of the synchornization primitive is not verified here but the lock policy implementation is verified by the lock set algorithm.
+
+b.Utility: The algorithm presented here is not 100% in detecting all races (seldom any bug detection programs are). Eraser seems to catch all the blantant voilations of locking easily, but mostly fails on complex races. Thus its utility is very much limited in a production environment with smart programmers because they seldom make blatant mistakes.
+
+c.The writing style of the paper makes it easy to understand. The order being present a concept, comment on how it can be implemented and give concrete examples of working. 
+
+
+Deficiency of Paper. 
+--------------------
+The authors covered two types of memory address in instrumentaion address from head/data section and dynamically allocated addresses. The authors completely forget memory allocated using mmap of files. The paper should have focused more making this tool perfect for large OS projecjs where detecting a race is hard (Instead only 1 page is presented on SPIN).
+
+Learning.
+---------
+Apart from the new algorithm learnt most to valueable learning part comes from description of data races in existing systems. For ex the vesta cache server example teaches us not to give out pointers to proteced shared data to functions outside the critical section. This gives good insight as to why we should code LockDS() and UnlockDS() seperately so that people can desingn custom critical sections.

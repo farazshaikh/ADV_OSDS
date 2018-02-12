@@ -1,0 +1,40 @@
+
+Faraz Shaikh
+Wed 10-10-2007
+
+
+Seperating Data and Control transfer in Distributed systems.
+
+3 Most Important Points.
+-----------------------
+a. Presented a totally new concept/model for building distibuted systems.
+b. The solution is a simple extension to the virtual memory model which most programmers are already familiar with. 
+c. Seperated the data and control transfer. (This was very hard to figure out, and needs very keen observation). The authors did a good job to eliminating the control transfer that was implicitly require for data transfers in RPC. Thus for every data-transfer operation the authors save on the following high level operations  
+	1> Notification/Scheduling of the destination process and 
+	2>rescheduling the destination process after the destination process completes. 
+
+Deficiency of Paper. 
+--------------------
+Changing the model for distributed system will have a definate impact on distributed system programmers. A small note on whether programmers liked/disliked the new model over RPC or message passing should have been included.
+
+Learning.
+---------
+Using a co-processor to handle traps by non-standard instructions, is a great way to emulate new instructions.
+
+
+Direct Access File System.
+
+
+3 Most Important Points. (The above concepts of remote address now becomes remote files)
+-----------------------
+a. Describes the state of the art in interconnect technologies.
+b. By using remote data-copying abilities in hardware DAFS elimates the need to do user-kernel file buffer copy, context switch and overhead of the network protocol.
+d. Does not take  thier invention higher up into the filesystem stack. So we can have implementation of DAFS as kernel mode FS driver there by all UNIX filesystem calls need not be changed. Applications gain performance without a rewrite.
+
+Deficeincy of the paper.
+------------------------
+Great paper ! Great Idea ! But there had to be an Performance VS Cost comparison. 
+
+Learning. 
+--------
+Old Concepts from old research from one domain can be become novel ideas in the other domain. Viz We had tunable cache coherency in MIPS shared memory SMP, then someone later came along and did something similar i.e TUNABLE CACH CONSISTENCY FOR A PARALLEL FILE STORE

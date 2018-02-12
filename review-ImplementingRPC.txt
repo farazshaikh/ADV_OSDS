@@ -1,0 +1,32 @@
+Name		:	Faraz Shaikh 		fshaikh@andrew.cmu.edu
+Paper Review	: 	BIRRELL AND NELSON
+			IMPLEMENTING RPC. 
+
+ Most Important Points. 
+=======================
+   1 Prior papers discuss about general do's and don't when implenting RPC. While this paper has seminal examples of design decisions that need to be taken while implementing RPC depending upon the 
+    a) The programming Language at hand. (Mesa)
+    b) The environment in which RPC runs (Dorado then powerful machines)
+    c) The application for which the RPC is intended to be used. (In this case heavy ditrubuted apps with multiple clients)
+   2 The researchers have a point about good systems design by providing alternate implementations for normal cases i.e      simple calls and complicated calls. 
+   3 They have clearly identified the key components that need to be indexed in writing a distributed system using RPC. So i      think that list is comprehensive. For example the use of 32 indentifiers for dispatchers, call-id and actvity id and the      entries in the database.
+
+
+ Most glaring deficiency.
+=========================
+	There is a blatant flaw (or language is misinterpreted by the reader) in the paper. In case of binding where the client just gives the type name the RPC runtime decides the best available instance of the call. The criterion for the best possible implementation is given as the server machine "Closest" to the client. The method that is used to decide the closest machine is wrong because it takes into consideration the minimum response time of the bind-request packet. But then are sure cases when the closest machine will be the slowest to respond in cases heavy load. (The system is designed for heavy load with multiple clients to a single server).
+
+
+ Points to be learnt. 
+=====================
+
+        Most importantly the store system for available interfaces must start of with as a third party tool for (ex Grapvine using its own proprietory RPC mechanism) and should be SIMPLE. It should be simple because later in time this system must be written in our own RPC mechanism - (Sort of boot strapping compiler analogy)
+
+	Next time as a client of an RPC server we must definately look for custom made solutions rather than out of the box soultions, because as claimed in the paper we can yeild 10% of performance gains. The system that stores all the interfaces available on a distributed network as to be distributed to avoid single point of failure (for ex the grapvine is a distributed DS). 
+
+
+
+
+
+
+

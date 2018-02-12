@@ -1,0 +1,30 @@
+
+Faraz Shaikh
+Wed 10-3-2007
+
+
+Log-Structured File System
+MENDEL ROSENBLUM and JOHN K. OUSTERHOUT
+University of California at Berkeley
+
+
+3 Most Important Points.
+-----------------------
+a. Random,small and synchronous blocks are detrimental for file systems. The solution is that filesystems should try for sequential,large asynchronous transfers. 
+b. Presens good methods for doing filesystems performance analysis. For example the Uniform-hot and code test pattern along with write-cost formula can be used to  compare any filesystem.
+c. Throws light on the order of operations to be performed when creating new files 
+	-write the data-block, then
+	-make the inode block and then 
+	-link to the parent directory
+   This makes the recovery possible in crashes after step 2.
+d. Cleaner policies can affect overall performance gains of a log structred filesystem.
+
+
+Deficiency of Paper. 
+--------------------
+More on disk structures should have been explained and drawn. The paper becomes very abstract because of the number of disk structres being used.
+
+
+Learning.
+---------
+Blocks size should while formatting disk should be large enough so that it offsets the seek time. One should avoid random small and synchronous disk accesses. 

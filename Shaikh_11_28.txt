@@ -1,0 +1,26 @@
+The logic of authentication. 
+Burrows,Abadi
+fshaikh@andrew.cmu.edu
+
+
+Summary: 
+	The paper provides a formal method/language to analyze authentication protocols. The approach used to analyze  
+authentication protocols includes summarizing the initial assumptions in the form of trust of principals and initial  
+awareness of keys. Once these requirements are listed the verification of the protocol entails proving some basic formulas as  logical conclusions to the protocol step (augmented by the initial assumptions).
+
+
+Highlights of the paper. 
+1. Describes a formal language/notation to describe the basic actions in a authentication protocol. Such formal notation  
+allows for stronger protocol verification as its (mostly) devoid of ambiguities. 
+2. Table 1 summaries subtle nuances between then existing authentication protocols. If the table is a result of their  
+verification procedure then it very commendable (but may be the listed characteristic of those protocol we already known).
+3. The analysis of the then existing Kerberos implementation, proves the importance of the analysis method described by the  
+author. The analysis method points out a redundancy in step 2 of the protocol. 
+
+Deficiency of the paper.
+I think the author wrongly concludes that Kerberos has a redundant double encryption. From my understanding I believe  
+Kerberos does the double encryption so that ticket request to the server cannot be masqueraded.
+
+Learning for future.
+We can analyze and verify new authentication algorithms using the message meaning, nonce verification and jurisdiction  
+postulates. (But for that we need to understand the postulates really well).

@@ -1,0 +1,21 @@
+
+Faraz Shaikh
+Wed 10-8-2007
+
+NASD
+Garth Gibson 98
+Carnegie Mellon University.
+
+3 Most Important Points.
+-----------------------
+a. Pushes more intelligence into the disk. Offload some task from the traditional file systems to disk systems. This task is maintainance of variable length objects.
+b. By coupling data-path processing with the disk (hardware), NASD achieves nearly linear I/O bandwidht scaling.
+c. The meta-data server or File Manager is still a bottleneck. This paper presents a partial solution to it by doing a capabilty based authorization and providing for capability caching. (ASYNCHRONOUS OVERSIGHT)
+
+Deficiency of Paper. 
+--------------------
+Fails to discuss the scalabitily of file-system metadata operations(transactions). It does not discuss or comment about hou metadata operations(create,delete,lock byte ranges) scalability. It can be inferred that transaction scalability is rather low on NASD because specially for transactions involving access control and namespace consistency which are handled by the centralized file manager.
+
+Learning.
+---------
+Performance gains can be achieved by moving processing to hardware (ASIC). In early research stages its not possible to build hardware so we can use commodity systems for doing harware emulation in software. This emulation gives us the worst case performance for the hardware solution, as all harware implementations will be faster than software emulation.
